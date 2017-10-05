@@ -42,6 +42,8 @@ void play() {
 	int lineCount[20] = {0};
 	bool done = false;
 	bool isXTurn = true;
+	int roundTotal;
+	int roundCurrent = 0;
 
 	// Wipe Board (wanted to move this to a function but can't figure out how to return arrays
 	for (int y = 0; y<20; y++)
@@ -54,11 +56,13 @@ void play() {
 
 	// Prompt user to modify rules
 	modifyRules(xSize, ySize, winChainLength, isWrapAroundMode);
+	roundTotal = xSize * ySize;
 
 	while (!done) {
 		int userInput;
 		char currentChar;
 		bool hasWinner = false;
+		roundCurrent++;
 
 		// Print out the board
 		printBoard(board, xSize, ySize);
@@ -73,7 +77,16 @@ void play() {
 		}
 
 		// Get user Input.  INPUT CHECK LATER-------
-		cin >> userInput;
+		bool inputIsValid = false;
+		while (!inputIsValid) {
+			cin >> userInput;
+			if (userInput < 0 || userInput >= xSize || lineCount[userInput] >= ySize) {
+				cout << "INVALID INPUT" << endl;
+			} else {
+				inputIsValid = true;
+			}
+		}
+		
 
 		// Place piece
 		int currentPos = lineCount[userInput]++;
@@ -83,7 +96,8 @@ void play() {
 		hasWinner = checkForWin(board, xSize, ySize, lineCount, userInput, winChainLength, isWrapAroundMode, currentChar);
 		
 		if (hasWinner) {
-			// End game is done
+			// Game is done
+			printBoard(board, xSize, ySize);
 			done = true;
 			if (isXTurn) {
 				cout << "X WINS" << endl;
@@ -91,10 +105,16 @@ void play() {
 			else {
 				cout << "O WINS" << endl;
 			}
-			printBoard(board, xSize, ySize);
 		} else {
-			// Flip turn if not done
-			isXTurn = !isXTurn;
+			if (roundCurrent >= roundTotal) {
+				// End if board full
+				printBoard(board, xSize, ySize);
+				cout << "DRAW" << endl;
+				done = true;
+			} else {
+				// Flip turn if not done
+				isXTurn = !isXTurn;
+			}
 		}
 	}
 }
@@ -166,22 +186,75 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 	bool isDone = false;
 
 	// INPUT CHECK THIS LATER-------
-	cout << "Modify Rules? (y/n xSize ySize winChainLength)" << endl;
-	char input;
-	cin >> input;
-	if (input == 'y') {
-		cin >> x;
-		cin >> y;
-		cin >> chainLength;
+	cout << "Modify Rules? (y/n)" << endl;
+	isDone = false;
+	while (!isDone) {
+		char input;
+		cin >> input;
+
+		switch (input) {
+		case 'y':
+			isDone = true;
+			break;
+		case 'n':
+			return;
+			break;
+		default:
+			cout << "INVALID INPUT" << endl;
+			break;
+		}
 	}
 
+	cout << "# Columns (4-20)" << endl;
+	isDone = false;
+	while (!isDone) {
+		int input;
+		cin >> input;
+
+		if (input < 4 || input > 20) {
+			cout << "INVALID INPUT" << endl;
+		} else {
+			x = input;
+			isDone = true;
+		}
+	}
+
+	cout << "# Rows (4-20)" << endl;
+	isDone = false;
+	while (!isDone) {
+		int input;
+		cin >> input;
+
+		if (input < 4 || input > 20) {
+			cout << "INVALID INPUT" << endl;
+		}
+		else {
+			y = input;
+			isDone = true;
+		}
+	}
+
+	cout << "# Matches to Win (3-" << x << ")" << endl;
+	isDone = false;
+	while (!isDone) {
+		int input;
+		cin >> input;
+
+		if (input < 3 || input > x) {
+			cout << "INVALID INPUT" << endl;
+		}
+		else {
+			chainLength = input;
+			isDone = true;
+		}
+	}
 	
 	// Wrap around mode
 	isDone = false;
 	while (!isDone) {
 		cout << "Wrap Around Mode? (y/n)" << endl;
 
-		char input = 'n';
+		char input;
 		cin >> input;
 
 		switch (input) {
@@ -206,8 +279,11 @@ void printBoard(char board[20][20], int xSize, int ySize) {
 		for (int x = 0; x < xSize; x++) {
 			if (y<0) {
 				cout << x << " ";
+				if (x < 10) {
+					cout << " ";
+				}
 			} else {
-				cout << board[x][ySize-y-1] << " ";
+				cout << board[x][ySize-y-1] << "  ";
 			}
 		}
 		cout << endl;
