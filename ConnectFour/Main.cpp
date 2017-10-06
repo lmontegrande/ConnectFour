@@ -16,6 +16,8 @@ int main() {
 		cout << "Play? (y/n)" << endl;
 		char input = 'n';
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		switch (input) {
 		case 'y':
@@ -80,6 +82,8 @@ void play() {
 		bool inputIsValid = false;
 		while (!inputIsValid) {
 			cin >> userInput;
+			cin.clear();
+			cin.ignore(1000, '\n');
 			if (userInput < 0 || userInput >= xSize || lineCount[userInput] >= ySize) {
 				cout << "INVALID INPUT" << endl;
 			} else {
@@ -191,6 +195,8 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 	while (!isDone) {
 		char input;
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		switch (input) {
 		case 'y':
@@ -210,6 +216,8 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 	while (!isDone) {
 		int input;
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		if (input < 4 || input > 20) {
 			cout << "INVALID INPUT" << endl;
@@ -224,6 +232,8 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 	while (!isDone) {
 		int input;
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		if (input < 4 || input > 20) {
 			cout << "INVALID INPUT" << endl;
@@ -239,6 +249,8 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 	while (!isDone) {
 		int input;
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		if (input < 3 || input > x) {
 			cout << "INVALID INPUT" << endl;
@@ -256,6 +268,8 @@ void modifyRules(int &x, int &y, int &chainLength, bool &isWrapAroundMode) {
 
 		char input;
 		cin >> input;
+		cin.clear();
+		cin.ignore(1000, '\n');
 
 		switch (input) {
 		case 'y':
